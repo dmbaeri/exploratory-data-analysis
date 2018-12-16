@@ -1,0 +1,129 @@
+library(readr)
+mydata <- read_csv(NULL, na = "NA")
+summary(mydata)
+install.packages("tidyverse")
+library(readr)
+mydata <- read_csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", na = "NA")
+summary(mydata)
+mydata <- read_csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", col_names = TRUE, na = "NA")
+summary(mydata)
+install.packages("knitr")
+install.packages("knitr")
+if(!require(installr)) {
+install.packages("installr");
+require(installr)
+q()
+if(!require(installr)) {
+install.packages("installr");
+require(installr)
+if(!require(installr)) {
+install.packages("installr");
+require(installr)
+source('~/.active-rstudio-document')
+install.packages("installr")
+library(installr)
+updateR()
+library(installr)
+install.packages("tidyverse")
+library(readr)
+library(psych)
+install.packages("psych")
+library(psych)
+update.packages(tidyverse)
+update.packages("tidyverse")
+library(psych)
+install.packages("psych")
+library(psych)
+library(tidyverse)
+mydata <- read_csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", col_names = TRUE, na = "NA")
+summary(mydata)
+dim(mydata)
+str(mydata)
+head(mydata)
+ggplot(data=mydata) +
+geom_bar(mapping = aes(x=site))
+noBlanks <- mydata %>%
+filter(new_customer >= 0)
+ggplot(data = noBlanks, mapping = aes(x = new_customer)) +
+geom_histogram(binwidth = 1)
+ggplot(data = noBlanks, mapping = aes(x = new_customer, color = platform)) +
+geom_freqpoly(binwidth = 1)
+Distribution of the number of orders per user/customer against a new or returning customer
+```{r}
+ggplot(data = noBlanks, mapping = aes(x = new_customer, y = orders)) +
+geom_boxplot()
+```
+Distribution of the number of orders per user/customer against a the type of platform used
+```{r}
+ggplot(data = noBlanks, mapping = aes(x = platform, y = orders)) +
+geom_boxplot()
+```
+knit_with_parameters('C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/EDA.Rmd')
+library(tidyverse)
+str(mydata)
+boxplot(mydata$orders ~ mydata$platform)
+ggplot(data = noBlanks, mapping = aes(x = site, y = orders)) +
+geom_boxplot()
+install.packages("tidyverse")
+dev.off()
+dev.off
+dev.off()
+installr::installr()
+install.packages(installr())
+installr()
+reprex:::reprex_addin()
+Sys.getenv("PATH")
+mydata <- read_csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", col_names = TRUE, na = "NA")
+library(tidyverse)
+mydata <- read_csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", col_names = TRUE, na = "NA")
+Jan <- mydata$day < "2/1/2013"
+plot(Jan)
+count(Jan)
+summary(Jan)
+summarise(Jan)
+Jan <- mydata$day < "2/1/2013 0:00"
+summary(Jan)
+str(Jan)
+Jan = mydata$day < "2/1/2013 0:00"
+str(Jan)
+head(Jan)
+summary(Jan)
+ggplot(data = mydata) geom_bar(mapping = aes(x = Jan), na.rm = TRUE)
+ggplot(data = mydata) + geom_bar(mapping = aes(x = Jan), na.rm = TRUE)
+ggplot(data = mydata) + geom_bar(mapping = aes(x = Jan == TRUE), na.rm = TRUE)
+ggplot(data = mydata) + geom_bar(mapping = aes(x = mydat$Jan == TRUE)
+exit(0)
+ggplot(data = mydata) + geom_bar(mapping = aes(x = mydat$Jan == TRUE))
+ggplot(data = mydata) + geom_bar(mapping = aes(x = mydata$Jan == TRUE))
+ggplot(data = mydata) + geom_bar(mapping = aes(x = (Jan == TRUE))
+)
+ggplot(data=mydata) +
+geom_bar(mapping = aes(x = month(day), position = position_stack(reverse = TRUE), na.rm = TRUE) +
+coord_flip()
+)
+ggplot(data=mydata) +
+geom_bar(mapping = aes(x = dmy(day), position = position_stack(reverse = TRUE), na.rm = TRUE) +
+coord_flip()
+)
+install.packages("lubridate")
+install.packages("lubridate")
+library(lubridate)
+ggplot(data=mydata) +
+geom_bar(mapping = aes(x = day), position = position_stack(reverse = TRUE)) +
+coord_flip() +
+scale_x_date(labels = date_format("%m/%y"))
+library(tidyverse)
+ggplot(data=mydata) +
++ geom_bar(mapping = aes(x = day), position = position_stack(reverse = TRUE)) +
++ coord_flip() +
++ scale_x_date(labels = date_format("%m/%y"))
+library(scales)
+load.libraries <- c('data.table', 'testthat','gridExtra','corrplot','GGally','e1071')
+install.lib <- load.libraries[!load.libraries %in% installed.packages()]
+for (libs in install.lib) install.packages(libs, dependencies = TRUE)
+sapply(load.libraries, require, character = TRUE)
+?make.names
+source('~/.active-rstudio-document', echo=TRUE)
+?data.frame
+?data.table
+install.packages("DataExplorer")

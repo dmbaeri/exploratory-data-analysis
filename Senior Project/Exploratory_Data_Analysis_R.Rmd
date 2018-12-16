@@ -1,0 +1,204 @@
+---
+output:
+  word_document: default
+  html_notebook: default
+  pdf_document: default
+  html_document: default
+---
+
+---
+title: "e-Commerce Exploratory Data Analysis (EDA)"
+author: "Dorcas Mbaeri"
+date: "March 3, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width = 12, fig.height = 8)
+```
+
+
+```{r loadlibrary, include=FALSE}
+library(tidyverse)
+library(scales)
+require(data.table)
+set.seed(1L)
+library(testthat)
+library(gridExtra)
+library(corrplot)
+library(GGally)
+library(e1071)
+library(DataExplorer)
+```
+
+
+### Structure of data
+
+This is the introduction to my senior project at the University of Houston-Downtown. We will begin by exploring the dataset containing Zappos.com's customer transactions.
+
+But first let's load the data.
+
+```{r mydata}
+mydata <- read.csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", header = TRUE, row.names = NULL, na = "NA")
+
+my_data <- data.table(mydata)
+```
+
+
+\newline
+\newline
+
+
+Now, let's take look at the structure of the data and missing values. From the below, we see that there are 8259 blank values in *new_customer* as well as 2469 blank values for *conversion rate*, *bounce_rate*, *add_to_cart_rate*. Note that the last three columns are calculated using _orders_, _bounces_, *add_to_cart*, and _visits_. Conversion rate is calculted by diving the number of orders by visits; bounce rate is calculated by dividing bounces by visits; and, add to cart rate is dividing add to cart by visits. So, if there is a division by 0 (meaning with 0 visits), this woud be *null*.
+```{r}
+summary(mydata)
+
+dim(mydata)
+
+str(mydata)
+
+head(mydata)
+
+colSums(sapply(mydata, is.na))
+```
+
+
+\newline
+\newline
+
+
+We want to identify the number of missing values in each numeric column.
+```{r}
+num_var <- names(my_data)[which(sapply(my_data, is.numeric))]
+
+summary(my_data[,.SD, .SDcols = num_var])
+
+colSums(sapply(my_data[,.SD, .SDcol = num_var], is.na))
+```
+The summary statistics helps to see the distribution of the numerical variables. For example, the mean number of _visits_ in the data is **1935**, the median is **24**, and the maximum value is **136057**. In this scenario, we can conclude that the spread of this dimension is **_skewed right_** or positively skewed (with the mean to the right of the median). We will test some of these columns using a boxplot to visualize their spread.
+
+\newline
+\newline
+
+
+Let's also do a comparison of missing values in the categorical columns.
+```{r}
+char_var <- names(my_data)[which(sapply(my_data, is.factor))]
+
+summary(my_data[,.SD, .SDcols = char_var])
+
+colSums(sapply(my_data[,.SD, .SDcols = char_var], is.na))
+
+```
+
+
+\newline
+\newline
+
+
+It's always a lot easier when we can visualize any missing data representation. So we will create a function that will visually display the comparison of missing values to non-missing values in our data set.
+*(kaggle post by AiO)*
+```{r}
+Missing_Values <- function(input_data) {
+  temp_data <- as.data.frame(ifelse(is.na(input_data), 0, 1))
+  temp_data <- temp_data[, order(colSums(temp_data))]
+  data_temp <- expand.grid(list(x= 1:nrow(temp_data), y=colnames(temp_data)))
+  data_temp$m <- as.vector(as.matrix(temp_data))
+  data_temp <- data.frame(x = unlist(data_temp$x), y = unlist(data_temp$y), m = unlist(data_temp$m))
+  
+  ggplot(data_temp) +
+    geom_tile(aes(x=x, y=y, fill=factor(m))) +
+    scale_fill_manual(values=c("white", "black"), name = "Missing\n(0 = Yes, 1 = No)") +
+    theme_light() +
+    ylab("") +
+    xlab("")
+}
+
+Missing_Values(my_data[, colSums(is.na(my_data)) > 0, with = FALSE])
+```
+
+
+
+
+
+Here are visual distributions of the categorical variables of __*mydata*__ (excludes missing values):
+
+Distribution of *site*
+```{r}
+ggplot(data = mydata) +
+  geom_bar(mapping = aes(x = mydata$site), na.rm = TRUE)
+```
+
+
+
+*new_customer* distribution
+```{r}
+ggplot(data=mydata) +
+  geom_bar(mapping = aes(x = new_customer), na.rm = TRUE)
+```
+
+
+
+_platform_ distribution
+```{r}
+ggplot(data = mydata, mapping = aes(x = platform), na.ra = TRUE) +
+  geom_histogram(stat = "count", position = position_stack(reverse = TRUE), na.ra = TRUE)
+```
+
+
+We can take a look at the distribution of *conversion_rate*, *bounce_rate* and *add_to_cart_rate* by *new_customer* as boxplots and frequency plots. From these plots, we see that Acme and Android and iOS are the most most used site and platforms to have items searched for as well as added to cart. 
+```{r}
+boxplot(mydata$add_to_cart_rate ~ mydata$new_customer, outline=FALSE, xlab = 'Rate of Items Added to Cart per Visit', ylab='Type of Customer', horizontal=TRUE)
+
+ggplot(data=mydata, mapping = aes(x = add_to_cart_rate)) +
+  geom_freqpoly(mapping = aes(color = site))
+
+ggplot(data=mydata, mapping = aes(x = add_to_cart_rate)) +
+  geom_freqpoly(mapping = aes(color = platform))
+
+
+
+boxplot(mydata$conversion_rate ~ mydata$new_customer, outline=FALSE, xlab = 'Rate of Orders Per Visit', ylab='Type of Customer', horizontal=TRUE)
+
+ggplot(data=mydata, mapping = aes(x = conversion_rate)) +
+  geom_freqpoly(mapping = aes(color = site))
+
+ggplot(data=mydata, mapping = aes(x = conversion_rate)) +
+  geom_freqpoly(mapping = aes(color = platform))
+
+
+
+boxplot(mydata$bounce_rate ~ mydata$new_customer, outline=FALSE, xlab = 'Rate of Bounces Per Visit', ylab='Type of User', horizontal = TRUE)
+ggplot(data=mydata, mapping = aes(x = bounce_rate)) +
+  geom_freqpoly(mapping = aes(color = site))
+
+ggplot(data=mydata, mapping = aes(x = bounce_rate)) +
+  geom_freqpoly(mapping = aes(color = platform))
+```
+
+
+
+Distribution of the number of orders per type of user/customer as well as a scatterplot of the orders. The scatterplot can show us the relationships or correlation between each column and the orders.
+```{r}
+boxplot(mydata$orders ~ mydata$new_customer, xlab = 'Number of Orders', ylab='Type of User', horizontal = TRUE)
+
+plot_scatterplot(mydata, "orders", title = "Scatter Plots by Orders")
+```
+
+
+Here is a complete histogram of all continuous variables in the data set:
+```{r}
+plot_histogram(my_data)
+```
+It seems that most of the continuous data are right skewed with many missing values. Let's take it a step further and look at the bivariate correlation of some variables with respect to the others. We will begin with the continuous variables.
+```{r}
+plot_correlation(mydata, type = "c")
+```
+
+Now let's look at the discrete variables.
+```{r}
+plot_correlation(mydata, type = "d")
+```
+Using the plot above, Acme shows to have negative correlation to Sortly and Pinnacle, while there is a strong correlation between the use of Android platforms paired with the Botly site. We can also see that iOS users display a stronger correlation with the Widgetry and Tabular sites than with any other sites.

@@ -1,0 +1,67 @@
+---
+title: "Zappos.com's Customer Transactions Exploratory Data Analysis (EDA)"
+author: "Dorcas Mbaeri"
+date: "March 3, 2018"
+output: html_document
+---
+
+
+```{r loadlibrary, include=FALSE}
+library(tidyverse)
+```
+
+
+### Structure of data
+
+This is the introduction to my senior project at the University of Houston-Downtown. We will begin by exploring the dataset containing Zappos.com's customer transactions.
+
+But first let's load the data.
+
+```{r mydata}
+mydata <- read_csv("C:/Users/Dorcas/OneDrive - University of Houston Downtown/SeniorProject/Senior Project/Analytics_Challenge_Data.csv", col_names = TRUE, na = "NA")
+```
+
+Now, let's take look at the structure of the data:
+```{r}
+summary(mydata)
+
+dim(mydata)
+
+str(mydata)
+
+head(mydata)
+```
+
+Here are visual distributions of some categorical variables of __*mydata*__:
+
+Bar chart of *site*
+```{r}
+ggplot(data=mydata) +
+  geom_bar(mapping = aes(x=site))
+```
+
+Histogram of *new_customer* (not including blanks)
+```{r}
+noBlanks <- mydata %>%
+  filter(new_customer >= 0)
+
+ggplot(data = noBlanks, mapping = aes(x = new_customer)) +
+  geom_histogram(binwidth = 1)
+```
+
+Line graph of _platform_ and *new_customer*
+```{r}
+ggplot(data = noBlanks, mapping = aes(x = new_customer, y = ..density..)) +
+  geom_freqpoly(mapping = aes(color = platform), binwidth = 1)
+```
+
+Distribution of the number of orders per user/customer against the site name
+```{r}
+ggplot(data = noBlanks, mapping = aes(x = site, y = orders)) +
+  geom_boxplot()
+```
+
+Distribution of the number of orders per user/customer against a the type of platform used
+```{r}
+boxplot(mydata$orders ~ mydata$platform)
+```
